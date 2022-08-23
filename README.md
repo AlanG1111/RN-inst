@@ -1,1 +1,1 @@
-# RN-inst
+# RN-self-posts
