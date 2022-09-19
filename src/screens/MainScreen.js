@@ -1,9 +1,10 @@
-import React from "react";
-import { View, StyleSheet, FlatList } from "react-native";
+import React, { useEffect } from "react";
+import { Platform } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import AppHeaderIcon from "../components/AppHeaderIcon";
-import Post from "../components/Post";
+import PostList from "../components/PostList";
 import { DATA } from "../data";
+import { THEME } from "../theme";
 
 export const MainScreen = ({ navigation }) => {
   const openPostHandler = (post) => {
@@ -13,44 +14,36 @@ export const MainScreen = ({ navigation }) => {
       booked: post.booked,
     });
   };
-  navigation.setOptions({
-    title: "My blog",
-    headerLeft: () => (
-      <HeaderButtons HeaderButtonComponent={AppHeaderIcon}>
-        <Item
-          title='Toggle Drawer'
-          iconName='ios-menu'
-          onPress={() => console.log("sdsd")}
-        />
-      </HeaderButtons>
-    ),
-    headerRight: () => (
-      <HeaderButtons HeaderButtonComponent={AppHeaderIcon}>
-        <Item
-          title='Take photo'
-          iconName='ios-camera'
-          onPress={() => console.log("sdsd")}
-        />
-      </HeaderButtons>
-    ),
-  });
-  return (
-    <View style={styles.wrapper}>
-      <FlatList
-        data={DATA}
-        keyExtractor={(post) => post.id.toString()}
-        renderItem={({ item }) => <Post post={item} onOpen={openPostHandler} />}
-      />
-    </View>
-  );
+
+  useEffect(() => {
+    navigation.setOptions({
+      title: "My blog",
+      headerStyle: {
+        backgroundColor: Platform.OS === "android" ? THEME.MAIN_COLOR : "#fff",
+      },
+      headerTintColor: Platform.OS === "ios" ? THEME.MAIN_COLOR : "#fff",
+      headerTitleStyle: {
+        fontWeight: "bold",
+      },
+      headerLeft: () => (
+        <HeaderButtons HeaderButtonComponent={AppHeaderIcon}>
+          <Item
+            title='Toggle Drawer'
+            iconName='ios-menu'
+            onPress={() => navigation.toggleDrawer()}
+          />
+        </HeaderButtons>
+      ),
+      headerRight: () => (
+        <HeaderButtons HeaderButtonComponent={AppHeaderIcon}>
+          <Item
+            title='Take photo'
+            iconName='ios-camera'
+            onPress={() => console.log("aaaa")}
+          />
+        </HeaderButtons>
+      ),
+    });
+  }, []);
+  return <PostList data={DATA} onOpen={openPostHandler} />;
 };
-
-// MainScreen.navigationOptions = {
-//   headerTitle: "My blog",
-// };
-
-const styles = StyleSheet.create({
-  wrapper: {
-    padding: 10,
-  },
-});

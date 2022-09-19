@@ -19,18 +19,20 @@ export const PostScreen = ({ navigation, route }) => {
   const booked = route.params["booked"];
   const iconName = booked ? "ios-star" : "ios-star-outline";
 
-  navigation.setOptions({
-    title: "Post from " + new Date(date).toLocaleDateString(),
-    headerRight: () => (
-      <HeaderButtons HeaderButtonComponent={AppHeaderIcon}>
-        <Item
-          title='Take photo'
-          iconName={iconName}
-          onPress={() => console.log("sdsd")}
-        />
-      </HeaderButtons>
-    ),
-  });
+  useEffect(() => {
+    navigation.setOptions({
+      title: "Post from " + new Date(date).toLocaleDateString(),
+      headerRight: () => (
+        <HeaderButtons HeaderButtonComponent={AppHeaderIcon}>
+          <Item
+            title='Take photo'
+            iconName={iconName}
+            onPress={() => console.log("aaaa")}
+          />
+        </HeaderButtons>
+      ),
+    });
+  }, []);
 
   const removeHandler = () => {
     Alert.alert(
