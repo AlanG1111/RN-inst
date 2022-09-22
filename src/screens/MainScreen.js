@@ -1,12 +1,16 @@
 import React, { useEffect } from "react";
 import { Platform } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import { useDispatch, useSelector } from "react-redux";
 import AppHeaderIcon from "../components/AppHeaderIcon";
 import PostList from "../components/PostList";
-import { DATA } from "../data";
+import { loadPosts } from "../store/actions/post";
 import { THEME } from "../theme";
 
 export const MainScreen = ({ navigation }) => {
+  const allPosts = useSelector((state) => state.postReducer.allPosts);
+  const dispatch = useDispatch();
+
   const openPostHandler = (post) => {
     navigation.navigate("Post", {
       postId: post.id,
@@ -14,6 +18,10 @@ export const MainScreen = ({ navigation }) => {
       booked: post.booked,
     });
   };
+
+  useEffect(() => {
+    dispatch(loadPosts());
+  }, [dispatch]);
 
   useEffect(() => {
     navigation.setOptions({
@@ -45,5 +53,5 @@ export const MainScreen = ({ navigation }) => {
       ),
     });
   }, []);
-  return <PostList data={DATA} onOpen={openPostHandler} />;
+  return <PostList data={allPosts} onOpen={openPostHandler} />;
 };

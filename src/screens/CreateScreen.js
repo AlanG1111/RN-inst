@@ -1,7 +1,25 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import AppHeaderIcon from "../components/AppHeaderIcon";
+import { navOptions } from "../navigation/AppNavigation";
 
-export const CreateScreen = () => {
+export const CreateScreen = ({ navigation }) => {
+  useEffect(() => {
+    navigation.setOptions({
+      title: "Create",
+      ...navOptions,
+      headerLeft: () => (
+        <HeaderButtons HeaderButtonComponent={AppHeaderIcon}>
+          <Item
+            title='Toggle Drawer'
+            iconName='ios-menu'
+            onPress={() => navigation.toggleDrawer()}
+          />
+        </HeaderButtons>
+      ),
+    });
+  }, []);
   return (
     <View style={styles.center}>
       <Text>Create</Text>
@@ -16,4 +34,3 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
-

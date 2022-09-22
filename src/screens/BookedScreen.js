@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
 import { Platform } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import { useSelector } from "react-redux";
 import AppHeaderIcon from "../components/AppHeaderIcon";
 import PostList from "../components/PostList";
-import { DATA } from "../data";
 import { THEME } from "../theme";
 
 export const BookedScreen = ({ navigation }) => {
+  const bookedPosts = useSelector((state) => state.postReducer.bookedPosts);
   const openPostHandler = (post) => {
     navigation.navigate("Post", {
       postId: post.id,
@@ -38,10 +39,5 @@ export const BookedScreen = ({ navigation }) => {
     });
   }, []);
 
-  return (
-    <PostList
-      data={DATA.filter((post) => post.booked)}
-      onOpen={openPostHandler}
-    />
-  );
+  return <PostList data={bookedPosts} onOpen={openPostHandler} />;
 };

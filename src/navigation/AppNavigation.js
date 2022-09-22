@@ -12,6 +12,16 @@ import { BookedScreen } from "../screens/BookedScreen";
 
 import { THEME } from "../theme";
 
+export const navOptions = {
+  headerStyle: {
+    backgroundColor: Platform.OS === "android" ? THEME.MAIN_COLOR : "#fff",
+  },
+  headerTintColor: Platform.OS === "ios" ? THEME.MAIN_COLOR : "#fff",
+  headerTitleStyle: {
+    fontWeight: "bold",
+  },
+};
+
 export default function AppNavigation() {
   const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
@@ -19,7 +29,12 @@ export default function AppNavigation() {
 
   const DrawerStack = () => {
     return (
-      <Drawer.Navigator initialRouteName='Root'>
+      <Drawer.Navigator
+        initialRouteName='Root'
+        screenOptions={{
+          drawerActiveTintColor: THEME.MAIN_COLOR,
+        }}
+      >
         <Drawer.Screen
           options={{ headerShown: false }}
           name='Blog page'

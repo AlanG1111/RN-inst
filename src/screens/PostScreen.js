@@ -9,15 +9,26 @@ import {
   Alert,
 } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import { useDispatch, useSelector } from "react-redux";
 import AppHeaderIcon from "../components/AppHeaderIcon";
-import { DATA } from "../data";
+import { removePost, toggleBooked } from "../store/actions/post";
 import { THEME } from "../theme";
 
 export const PostScreen = ({ navigation, route }) => {
+  const dispatch = useDispatch();
   const postId = route.params["postId"];
   const date = route.params["date"];
-  const booked = route.params["booked"];
-  const iconName = booked ? "ios-star" : "ios-star-outline";
+  const booked = useSelector((state) =>
+    state.postReducer.bookedPosts.some((post) => post.id === postId)
+  );
+  const post = useSelector((state) =>
+    state.postReducer.allPosts.find((p) => p.id === postId)
+  );
+  const iconName = post.booked ? "ios-star" : "ios-star-outline";
+
+  const toggleHandler = () => {
+    dispatch(toggleBooked(postId));
+  };
 
   useEffect(() => {
     navigation.setOptions({
@@ -27,12 +38,12 @@ export const PostScreen = ({ navigation, route }) => {
           <Item
             title='Take photo'
             iconName={iconName}
-            onPress={() => console.log("aaaa")}
+            onPress={toggleHandler}
           />
         </HeaderButtons>
       ),
     });
-  }, []);
+  }, [iconName]);
 
   const removeHandler = () => {
     Alert.alert(
@@ -46,7 +57,10 @@ export const PostScreen = ({ navigation, route }) => {
         {
           text: "OK",
           style: "destructive",
-          onPress: () => console.log("OK Pressed"),
+          onPress: () => {
+            navigation.navigate("Blog");
+            dispatch(removePost(postId));
+          },
         },
       ],
       {
@@ -55,7 +69,6 @@ export const PostScreen = ({ navigation, route }) => {
     );
   };
 
-  const post = DATA.find((p) => p.id === postId);
   return (
     <ScrollView>
       <Image source={{ uri: post.img }} style={styles.image} />
