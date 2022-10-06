@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
-  Image,
   Button,
   ScrollView,
   TouchableWithoutFeedback,
@@ -13,6 +12,7 @@ import { TextInput } from "react-native-gesture-handler";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { useDispatch } from "react-redux";
 import AppHeaderIcon from "../components/AppHeaderIcon";
+import PhotoPicker from "../components/PhotoPicker";
 import { navOptions } from "../navigation/AppNavigation";
 import { addPost } from "../store/actions/post";
 import { THEME } from "../theme";
@@ -20,6 +20,8 @@ import { THEME } from "../theme";
 export const CreateScreen = ({ navigation }) => {
   const [text, setText] = useState("");
   const dispatch = useDispatch();
+  const imgRef = useRef();
+
   useEffect(() => {
     navigation.setOptions({
       title: "Create post page",
@@ -36,14 +38,15 @@ export const CreateScreen = ({ navigation }) => {
     });
   }, []);
 
-  const img =
-    "https://static.coindesk.com/wp-content/uploads/2019/01/shutterstock_1012724596-860x430.jpg";
+  const photoPickHandler = (uri) => {
+    imgRef.current = uri;
+  };
 
   const saveHandler = () => {
     const post = {
       date: new Date().toJSON(),
       text,
-      img,
+      img: imgRef.current,
       booked: false,
     };
     dispatch(addPost(post));
@@ -61,16 +64,12 @@ export const CreateScreen = ({ navigation }) => {
             onChangeText={setText}
             multiline
           />
-          <Image
-            style={{ width: "100%", height: 200, marginBottom: 10 }}
-            source={{
-              uri: img,
-            }}
-          />
+          <PhotoPicker onPick={photoPickHandler} />
           <Button
             title='Create post'
             color={THEME.MAIN_COLOR}
             onPress={saveHandler}
+            disabled={!text}
           />
         </View>
       </TouchableWithoutFeedback>
